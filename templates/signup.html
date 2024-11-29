@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regístrate</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+</head>
+
+<body>
+    <header>
+        <p class="firstTitle"><a href="{{ url_for('start') }}">SiMAEC</a></p>
+
+        <nav class="nav-list">
+            <ul>
+                <li><a href="{{ url_for('temperatures') }}">Límites y umbrales</a></li>
+                <li><a href="{{ url_for('userInfo') }}">Información de usuarios</a></li>
+                <li><a href="{{ url_for('signup') }}">Agregar usuarios</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <p class="firstMessage">Agregar a un nuevo usuario</p>
+        <div class="SignLog-container">
+            <form action="/signup" method="POST">
+                <div class="signlog-item">
+                    <label for="txtNombre">Nombre completo:</label>
+                </div>
+                <div class="signlog-item">
+                    <input type="text" class="form-control" name="txtNombre" id="txtNombre" required>
+                </div>
+                <div class="signlog-item">
+                    <label for="txtEmailSU">Correo electrónico:</label>
+                </div>
+                <div class="signlog-item">
+                    <input type="email" class="form-control" name="txtEmailSU" id="txtEmailSU" required>
+                </div>
+                <div class="signlog-item">
+                    <label for="txtUserSU">Usuario:</label>
+                </div>
+                <div class="signlog-item">
+                    <input type="text" class="form-control" name="txtUserSU" id="txtUserSU" required>
+                </div>
+                <div class="signlog-item">
+                    <label for="txtPasswordSU">Contraseña:</label>
+                </div>
+                <div class="signlog-item">
+                    <input type="password" class="form-control" name="txtPasswordSU" id="txtPasswordSU" required>
+                </div>
+                <div class="signlog-item">
+                    <button class="signin-btn" name="btnSignUp" id="btnSignUp">Agregar usuario</button>
+                </div>
+            </form>
+            
+        </div>
+    </main>
+
+
+
+
+    <script src="bootstrap-5.0.2/dist/js/bootstrap.min.js"></script>
+</body>
+
+</html>

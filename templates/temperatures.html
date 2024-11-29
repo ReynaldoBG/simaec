@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temperaturas</title>
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+
+    <header>
+        <p class="firstTitle"><a href="{{ url_for('start') }}">SiMAEC</a></p>
+
+        <nav class="nav-list">
+            <ul>
+                <li><a href="{{ url_for('temperatures') }}">Límites y umbrales</a></li>
+                <li><a href="{{ url_for('userInfo') }}">Información de usuarios</a></li>
+                <li><a href="{{ url_for('signup') }}">Agregar usuarios</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <h3>Límites y umbrales</h3>
+
+    <!-- Formulario de inserción -->
+    <form id="insert-form">
+        <input type="number" id="minLimit" name="minLimit" placeholder="Mínimo" required>
+        <input type="number" id="maxLimit" name="maxLimit" placeholder="Máximo" required>
+        <input type="number" id="minThreshold" name="minThreshold" placeholder="Umbral Mínimo" required>
+        <input type="number" id="maxThreshold" name="maxThreshold" placeholder="Umbral Máximo" required>
+        <button class="signin-btn" style="width: 120px; font-size: medium;" type="submit">Agregar</button>
+    </form>
+
+    <h2>Lista de Temperaturas</h2>
+    <ul id="threshold-list">
+        {% for threshold in thresholds %}
+        <li id="threshold-{{ threshold[0] }}">
+            ID: {{ threshold[0] }}, Min: {{ threshold[1] }}, Max: {{ threshold[2] }},
+            Min Umbral: {{ threshold[3] }}, Max Umbral: {{ threshold[4] }}
+            <button class="delete-btn" onclick="deleteThreshold({{ threshold[0] }})">Eliminar</button>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <script>
+        // Configuración de Pusher
+        Pusher.logToConsole = true;
+        var pusher = new Pusher('42b9b4800a5a14fc436c', {
+            cluster: 'us2'
+        });
+
+        var channel = pusher.subscribe('threshold-channel');
+
+        // Escuchar eventos de inserción
+        channel.bind('new-threshold', function(data) {
+            var list = document.getElementById("threshold-list");
+            var item = document.createElement("li");
+            item.id = "threshold-" + data.id;
+            item.innerHTML = `ID: ${data.id}, Min: ${data.minLimit}, Max: ${data.maxLimit}, Min Umbral: ${data.minThreshold}, Max Umbral: ${data.maxThreshold} <button onclick="deleteThreshold(${data.id})">Eliminar</button>`;
+            list.appendChild(item);
+        });
+
+        // Escuchar eventos de eliminación
+        channel.bind('delete-threshold', function(data) {
+            var item = document.getElementById("threshold-" + data.id);
+            if (item) {
+                item.remove();
+            }
+        });
+
+        // Manejo del formulario de inserción
+        document.getElementById('insert-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            var minLimit = document.getElementById('minLimit').value;
+            var maxLimit = document.getElementById('maxLimit').value;
+            var minThreshold = document.getElementById('minThreshold').value;
+            var maxThreshold = document.getElementById('maxThreshold').value;
+
+            var formData = new FormData();
+            formData.append('minLimit', minLimit);
+            formData.append('maxLimit', maxLimit);
+            formData.append('minThreshold', minThreshold);
+            formData.append('maxThreshold', maxThreshold);
+
+            fetch('/insert_threshold', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Limpiar los campos del formulario
+                    document.getElementById('insert-form').reset();
+                }
+            });
+        });
+
+        // Función para eliminar un umbral
+        function deleteThreshold(id) {
+            fetch(`/delete_threshold/${id}`, {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Umbral eliminado');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de información de los usuarios</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+
+<body>
+    <header>
+        <p class="firstTitle"><a href="{{ url_for('start') }}">SiMAEC</a></p>
+
+        <nav class="nav-list">
+            <ul>
+                <li><a href="{{ url_for('temperatures') }}">Límites y umbrales</a></li>
+                <li><a href="{{ url_for('userInfo') }}">Información de usuarios</a></li>
+                <li><a href="{{ url_for('signup') }}">Agregar usuarios</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <p class="firstMessage">Control de información de los usuarios</p>
+        <div class="table-container">
+            <div>
+                <a href="{{ url_for('signup') }}"><button class="signin-btn"  style=" margin-left: 20px; width: 210px; font-size: medium;">Agregar nuevo usuario</button></a> 
+            </div>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Usuario</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr id="user-{{ user.IDUser }}">
+                        <td>{{ user.name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.user }}</td>
+                        <td>
+                            <button class="delete-btn" data-user-id="{{ user.IDUser }}">Eliminar</button>
+                            <a href="{{ url_for('edit_user', user_id=user.IDUser) }}">
+                                <button class="modify-btn">Editar</button>
+                            </a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4">No se encontraron usuarios</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+        </div>
+        
+    </main>
+</body>
+
+<script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+<script>
+    // Configurar Pusher
+    Pusher.logToConsole = false;  // Desactivar los logs de consola de Pusher
+    var pusher = new Pusher('42b9b4800a5a14fc436c', {
+        cluster: 'us2'
+    });
+    var channel = pusher.subscribe('user-channel');
+
+    // Escuchar el evento de eliminación del usuario
+    channel.bind('user-deleted', function (data) {
+        if (data.id) {
+            const userElement = document.getElementById('user-' + data.id);
+            if (userElement) {
+                userElement.remove();
+            }
+        }
+    });
+
+    // Escuchar el evento de adición de usuario
+    channel.bind('user-added', function (data) {
+        if (data.id) {
+            const tableBody = document.querySelector('tbody');
+            const newRow = document.createElement('tr');
+            newRow.id = 'user-' + data.id;
+            newRow.innerHTML = `
+                <td>${data.name}</td>
+                <td>${data.email}</td>
+                <td>${data.user}</td>
+                <td>
+                    <button class="delete-btn" data-user-id="${data.id}">Eliminar</button>
+                    <a href="/edit_user/${data.id}">
+                        <button class="modify-btn">Editar</button>
+                    </a>
+                </td>
+            `;
+
+            // Añadir el evento al botón de eliminación del nuevo usuario
+            newRow.querySelector('.delete-btn').addEventListener('click', function () {
+                deleteUser(data.id);
+            });
+
+            tableBody.appendChild(newRow); // Agregar la nueva fila a la tabla
+        }
+    });
+
+    // Escuchar el evento de actualización de usuario
+    channel.bind('user-updated', function (data) {
+        if (data.id) {
+            const userElement = document.getElementById('user-' + data.id);
+            if (userElement) {
+                userElement.innerHTML = `
+                    <td>${data.name}</td>
+                    <td>${data.email}</td>
+                    <td>${data.user}</td>
+                    <td>
+                        <button class="delete-btn" data-user-id="${data.id}">Eliminar</button>
+                        <a href="/edit_user/${data.id}">
+                            <button class="modify-btn">Editar</button>
+                        </a>
+                    </td>
+                `;
+
+                // Reasignar el evento de eliminación
+                userElement.querySelector('.delete-btn').addEventListener('click', function () {
+                    deleteUser(data.id);
+                });
+            }
+        }
+    });
+
+    // Función para eliminar el usuario
+    function deleteUser(userId) {
+        fetch('/delete_user', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ user_id: userId }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Aquí no se hace nada si la eliminación fue exitosa
+            })
+            .catch(error => {
+                console.error('Error al eliminar el usuario:', error);
+            });
+    }
+
+    // Añadir el evento de clic a los botones de eliminación
+    document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const userId = this.getAttribute('data-user-id');
+            deleteUser(userId);
+        });
+    });
+</script>
+
+
+</html>

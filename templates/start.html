@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Temperature and Humidity</title>
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+
+<body>
+    <header>
+        <p class="firstTitle"><a href="{{ url_for('start') }}">SiMAEC</a></p>
+
+        <nav class="nav-list">
+            <ul>
+                <li><a href="{{ url_for('temperatures') }}">Límites y umbrales</a></li>
+                <li><a href="{{ url_for('userInfo') }}">Información de usuarios</a></li>
+                <li><a href="{{ url_for('signup') }}">Agregar usuarios</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section>
+        <p>Temperature: <span id="temperature">{{ temperature }}</span> °C</p>
+        <p>Humidity: <span id="humidity">{{ humidity }}</span> %</p>
+    </section>
+
+    <section>
+        <h5>Límites establecidos</h5>
+
+        <div class="tempHum">
+            <div class="temperature">
+                <p>Temperatura mínima:</p>
+                <p>Temperatura máxima:</p>
+            </div>
+    
+    
+            <div class="humidity">
+                <p>Umbral inferior:</p>
+                <p>Umbral superior:</p>
+            </div>
+        </div>
+        
+    </section>
+
+
+    <script>
+        // Habilita los logs de Pusher para depuración (opcional)
+        Pusher.logToConsole = true;
+
+        // Crea una nueva instancia de Pusher con tu app_key y cluster
+        var pusher = new Pusher('your-app-key', {
+            cluster: 'your-cluster', // reemplaza con tu cluster
+            encrypted: true
+        });
+
+        // Suscríbete al canal de medidas
+        var channel = pusher.subscribe('measurements-channel');
+
+        // Escucha el evento 'new-measurement' que será enviado por el servidor
+        channel.bind('new-measurement', function (data) {
+            // Actualiza la temperatura y humedad con los nuevos datos
+            document.getElementById('temperature').textContent = data.temperature;
+            document.getElementById('humidity').textContent = data.humidity;
+        });
+    </script>
+</body>
+
+</html>

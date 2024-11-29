@@ -1,0 +1,240 @@
+body {
+    font-family: "Montserrat", sans-serif;
+    background-color: #0E0D12;
+    color: white;
+    font-size: 1.5vw;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #236194;
+    font-size: 2rem;
+    font-style: oblique;
+    font-weight: bold;
+    padding: 0 2%; 
+}
+a{
+    color: white;
+    text-decoration: none;
+}
+a:visited{
+    text-decoration: none;
+}
+.nav-list {
+    font-size: 1rem;
+}
+.nav-list a:hover{
+    color: gray;
+}
+
+.nav-list ul {
+    display: flex; 
+    list-style: none; 
+    padding: 0;
+    margin: 0;
+}
+
+.nav-list li {
+    margin-left: 20px;
+}
+
+.nav-list a {
+    color: white; 
+    
+}
+
+.firstTitle {
+    margin: 0; 
+}
+
+.firstMessage {
+    margin-top: 2%;
+    margin-left: 3%;
+}
+
+.SignLog-container {
+    margin-left: 35%;
+    margin-right: 35%;
+    padding: 2%;
+    display: flex;
+    justify-content: center;
+}
+
+.signlog-item {
+    margin: 2%;
+}
+
+.signin-btn {
+    margin: 2%;
+    width: 55%;
+    height: 60px;
+    font-size: 1rem;
+    background-color: #541C8C;
+    color: white;
+    font-size: 1.5vw; 
+}
+
+.signin-btn:hover {
+    background-color: #AB15BF;
+}
+
+.signin-btn:active {
+    box-shadow: 0 0 0 0.1rem #70137c;
+}
+
+input {
+    border: none;
+    border-radius: 7px;
+    height: 2rem;
+    width: 350px;
+    background-color: whitesmoke;
+}
+
+button {
+    border: none;
+    border-radius: 7px;
+    font-family: "Montserrat", sans-serif;
+}
+
+.container {
+    padding: auto;
+    margin-top: 1%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.tempChart {
+    background-color: #313131;
+
+}
+
+.tempHum {
+    display: flex;
+    justify-content: space-around;
+}
+
+.tempHum p {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.tempHum div {
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+}
+
+p.temperature {
+    color: #54d651;
+    margin-left: 20px;
+    margin-right: 20%;
+}
+
+p.humidity {
+    color: #be43ce;
+    margin-left: 20%;
+    margin-right: 20px;
+}
+
+.table-container {
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+table, tr, th, td {
+    border: 1px solid rgb(182, 182, 182);
+    border-collapse: collapse;
+    word-wrap: break-word; 
+    white-space: normal; 
+}
+
+th, td {
+    padding: 1rem; 
+    text-align: center; 
+    font-size: 1rem; 
+}
+
+thead {
+    background-color: #343a40;
+    font-size: 1.2vw;
+}
+
+tbody {
+    background-color: white;
+    color: black;
+}
+
+
+.delete-btn {
+    background-color: rgb(255, 63, 63);
+    color: white;
+    margin: 1%;
+}
+
+.delete-btn:hover {
+    background-color: red;
+}
+
+.delete-btn:active {
+    box-shadow: 0 0 0 0.1rem rgb(230, 0, 0);
+}
+
+.modify-btn {
+    background-color:  rgb(255, 169, 64);
+    color: white;
+    margin: 1%;
+}
+
+.modify-btn:hover {
+    background-color: darkorange;
+}
+
+.modify-btn:active {
+    box-shadow: 0 0 0 0.1rem rgb(255, 155, 33);
+}
+
+@media (max-width: 768px) {
+    body {
+        font-size: 2.5vw;
+    }
+
+    header {
+        font-size: 6vw;
+    }
+
+    .signin-btn {
+        font-size: 2vw;
+    }
+
+    thead {
+        font-size: 2.2vw;
+    }
+}
+
+
+.lims-Trhs-container{
+    display: flex;
+}
+.limits, .thresholds{
+ flex: 1;
+}
+
+.temp-Thres-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;   
+}
+
+.forms-Tables{
+    width: 45%;   
+    margin: 2%;         
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: center;
+}
+.forms-Tables table{
+    width: 100%;
+}

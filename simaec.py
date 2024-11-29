@@ -20,10 +20,10 @@ class Database:
         if cls._instance is None:
             try:
                 cls._instance = mysql.connector.connect(
-                    host='localhost',
-                    user='root',
-                    password='',
-                    database='simaec'
+                    host='sql208.infinityfree.com',
+                    user='if0_37571112',
+                    password='SiMAEC123',
+                    database='if0_37571112_simaec'
                 )
             except mysql.connector.Error as err:
                 print(f"Error de conexión: {err}")
